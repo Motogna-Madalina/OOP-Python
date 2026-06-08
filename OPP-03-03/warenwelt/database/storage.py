@@ -1,6 +1,10 @@
 import mysql.connector
 from mysql.connector import Error
 
+from warenwelt.models.electronics import Electronics
+from warenwelt.models.clothing import Clothing
+from warenwelt.models.book import Book
+
 
 class Storage:
 
@@ -8,6 +12,10 @@ class Storage:
 
         self.database_name = "onlineshop"
         self.connection = None
+
+    # =====================================
+    # DATABASE CONNECTION
+    # =====================================
 
     def connect(self):
 
@@ -22,6 +30,7 @@ class Storage:
             )
 
             if self.connection.is_connected():
+
                 print("DATABASE CONNECTED")
 
         except Error as e:
@@ -42,53 +51,33 @@ class Storage:
 
             print(f"DATABASE ERROR: {e}")
 
-    def save_customer(self, customer):
+
+
+
+# =====================================
+# GENERIC QUERY METHODS
+# =====================================
+
+def query(self, sql, values=None):
+
+    try:
 
         cursor = self.connection.cursor()
 
-        sql = """
-        INSERT INTO Customers
-        (name, address, email, phone, password)
-        VALUES (%s, %s, %s, %s, %s)
-        """
+        if values is not None:
 
-        values = (
-            customer.name,
-            customer.address,
-            customer.email,
-            customer.phone,
-            customer.password
-        )
+            cursor.execute(sql, values)
 
-        cursor.execute(sql, values)
+        else:
+
+            cursor.execute(sql)
 
         self.connection.commit()
 
-        print("CUSTOMER SAVED")
+        return cursor
 
-    def load_customer(self, customer_id):
+    except Error as e:
 
-        cursor = self.connection.cursor()
+        self.connection.rollback()
 
-        sql = """
-        SELECT *
-        FROM Customers
-        WHERE id_customer = %s
-        """
-
-        cursor.execute(sql, (customer_id,))
-
-        return cursor.fetchone()
-
-    def load_all_customers(self):
-
-        cursor = self.connection.cursor()
-
-        sql = """
-        SELECT *
-        FROM Customers
-        """
-
-        cursor.execute(sql)
-
-        return cursor.fetchall()
+        print(f"DATABASE ERROR: {e}")

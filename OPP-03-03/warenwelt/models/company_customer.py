@@ -50,3 +50,49 @@ class CompanyCustomer(Customer):
             f"Email: {self.email} | "
             f"Company ID: {self.company_id}"
         )
+# =====================================
+# DATABASE METHODS
+# =====================================
+
+@staticmethod
+def save(storage, customer):
+
+    sql = """
+    INSERT INTO CompanyCustomers
+    (name, address, email, phone, password, company_id)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    """
+
+    values = (
+        customer.name,
+        customer.address,
+        customer.email,
+        customer.phone,
+        customer.password,
+        customer.company_id
+    )
+
+    storage.query(sql, values)
+
+@staticmethod
+def load(storage, customer_id):
+
+    cursor = storage.query(
+        """
+        SELECT *
+        FROM CompanyCustomers
+        WHERE id_customer = %s
+        """,
+        (customer_id,)
+    )
+
+    return cursor.fetchone()
+
+@staticmethod
+def load_all(storage):
+
+    cursor = storage.query(
+        "SELECT * FROM CompanyCustomers"
+    )
+
+    return cursor.fetchall()

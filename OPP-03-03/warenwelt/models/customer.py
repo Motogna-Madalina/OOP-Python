@@ -1,3 +1,5 @@
+from binascii import Error
+
 from warenwelt.utils.validator import Validator
 
 
@@ -84,3 +86,139 @@ class Customer:
             f"Email: {self.email} | "
             f"Phone: {self.phone}"
         )
+
+    # =====================================
+    # CUSTOMER METHODS
+    # =====================================
+
+    def save_customer(self, customer):
+
+        try:
+
+            cursor = self.connection.cursor()
+
+            sql = """
+            INSERT INTO Customers
+            (name, address, email, phone, password)
+            VALUES (%s, %s, %s, %s, %s)
+            """
+
+            values = (
+                customer.name,
+                customer.address,
+                customer.email,
+                customer.phone,
+                customer.password
+            )
+
+            cursor.execute(sql, values)
+
+            self.connection.commit()
+
+            print("CUSTOMER SAVED")
+
+        except Error as e:
+
+            self.connection.rollback()
+
+            print(f"DATABASE ERROR: {e}")
+
+    def load_customer(self, customer_id):
+
+        try:
+
+            cursor = self.connection.cursor()
+
+            sql = """
+            SELECT *
+            FROM Customers
+            WHERE id_customer = %s
+            """
+
+            cursor.execute(sql, (customer_id,))
+
+            return cursor.fetchone()
+
+        except Error as e:
+
+            print(f"DATABASE ERROR: {e}")
+
+    def load_all_customers(self):
+
+        try:
+
+            cursor = self.connection.cursor()
+
+            sql = """
+            SELECT *
+            FROM Customers
+            """
+
+            cursor.execute(sql)
+
+            return cursor.fetchall()
+
+        except Error as e:
+
+            print(f"DATABASE ERROR: {e}")
+
+    def update_customer(self, customer):
+
+        try:
+
+            cursor = self.connection.cursor()
+
+            sql = """
+            UPDATE Customers
+            SET
+                name=%s,
+                address=%s,
+                email=%s,
+                phone=%s,
+                password=%s
+            WHERE id_customer=%s
+            """
+
+            values = (
+                customer.name,
+                customer.address,
+                customer.email,
+                customer.phone,
+                customer.password,
+                customer.id_customer
+            )
+
+            cursor.execute(sql, values)
+
+            self.connection.commit()
+
+            print("CUSTOMER UPDATED")
+
+        except Error as e:
+
+            self.connection.rollback()
+
+            print(f"DATABASE ERROR: {e}")
+
+    def delete_customer(self, customer_id):
+
+        try:
+
+            cursor = self.connection.cursor()
+
+            sql = """
+            DELETE FROM Customers
+            WHERE id_customer = %s
+            """
+
+            cursor.execute(sql, (customer_id,))
+
+            self.connection.commit()
+
+            print("CUSTOMER DELETED")
+
+        except Error as e:
+
+            self.connection.rollback()
+
+            print(f"DATABASE ERROR: {e}")    

@@ -54,3 +54,51 @@ class PrivateCustomer(Customer):
             f"Email: {self.email} | "
             f"Birthdate: {self.birthdate}"
         )
+    
+# =====================================
+# DATABASE METHODS
+# =====================================
+
+@staticmethod
+def save(storage, customer):
+
+    sql = """
+    INSERT INTO PrivateCustomers
+    (name, address, email, phone, password, birthdate)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    """
+
+    values = (
+        customer.name,
+        customer.address,
+        customer.email,
+        customer.phone,
+        customer.password,
+        customer.birthdate
+    )
+
+    storage.query(sql, values)
+
+@staticmethod
+def load(storage, customer_id):
+
+    cursor = storage.query(
+        """
+        SELECT *
+        FROM PrivateCustomers
+        WHERE id_customer = %s
+        """,
+        (customer_id,)
+    )
+
+    return cursor.fetchone()
+
+@staticmethod
+def load_all(storage):
+
+    cursor = storage.query(
+        "SELECT * FROM PrivateCustomers"
+    )
+
+    return cursor.fetchall()
+    

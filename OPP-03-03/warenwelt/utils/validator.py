@@ -1,21 +1,15 @@
-#here we have a class that validates the input 
-#data for our customers.
+import re
+from datetime import datetime
 
-#It has static methods that check if
-#the email, phone number, name, address,
-#birthdate and company ID are valid 
-#according to certain criteria.
-
-#This class is used in the constructors of 
-#the Customer classes to ensure that
-#the data is correct before creating 
-#an instance of a customer.
 
 class Validator:
 
     @staticmethod
     def validate_email(email):
-        return "@" in email and "." in email
+
+        pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+
+        return bool(re.match(pattern, email))
 
     @staticmethod
     def validate_phone(phone):
@@ -30,23 +24,33 @@ class Validator:
 
     @staticmethod
     def validate_name(name):
-        return len(name.strip()) > 1
+
+        pattern = r"^[A-Za-zÄÖÜäöüß\s'-]+$"
+
+        return bool(re.match(pattern, name))
 
     @staticmethod
     def validate_address(address):
-        return len(address.strip()) > 3
+
+        pattern = r"^[A-Za-zÄÖÜäöüß0-9\s,.\-]+$"
+
+        return bool(re.match(pattern, address))
 
     @staticmethod
     def validate_birthdate(birthdate):
 
-        if len(birthdate) != 10:
-            return False
+        try:
 
-        return (
-            birthdate[2] == "."
-            and
-            birthdate[5] == "."
-        )
+            datetime.strptime(
+                birthdate,
+                "%d.%m.%Y"
+            )
+
+            return True
+
+        except ValueError:
+
+            return False
 
     @staticmethod
     def validate_company_id(company_id):
