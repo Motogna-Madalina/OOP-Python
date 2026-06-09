@@ -1,38 +1,82 @@
 from warenwelt.models.private_customer import PrivateCustomer
 from warenwelt.models.company_customer import CompanyCustomer
+from warenwelt.models.book import Book
+from warenwelt.models.clothing import Clothing
+from warenwelt.models.electronics import Electronics
 
 
-print("=== Private Customer ===")
+def test_customers():
 
-p1 = PrivateCustomer(
-    "Madalina Motogna",
-    "Hauptstraße 1",
-    "madalina@test.com",
-    "+436641234567",
-    "pass123",
-    "01.05.1997"
-)
+    p1 = PrivateCustomer(
+        "John Doe",
+        "Street 1",
+        "john@test.com",
+        "123456789",
+        "password",
+        "01.01.1990"
+    )
 
-print("ID:", p1.id)
-print("Name:", p1.get_name())
-print("Address:", p1.get_address())
-print("Email:", p1.get_email())
-print("Phone:", p1.get_phone())
-print("Age:", p1.calculate_age())
+    c1 = CompanyCustomer(
+        "ACME GmbH",
+        "Business Street 10",
+        "office@acme.com",
+        "987654321",
+        "password",
+        "12345678"
+    )
+
+    print("\n===== PRIVATE CUSTOMER =====")
+    print(p1)
+
+    print("\n===== COMPANY CUSTOMER =====")
+    print(c1)
 
 
-print("\n=== Company Customer ===")
+def test_products():
 
-c1 = CompanyCustomer(
-    "Test Company",
-    "Industriestraße 10",
-    "company@test.com",
-    "+43123456789",
-    "company123",
-    "123456789"
-)
+    print("\n===== BOOK =====")
 
-print("ID:", c1.id)
-print("Name:", c1.get_name())
-print("Company ID:", c1.get_company_id())
-print("Company Valid:", c1.validate_company())
+    try:
+        b1 = Book(
+            "Python Basics",
+            19.99,
+            0.5,
+            "Max Mustermann",
+            350
+        )
+        print(b1)
+    except Exception as e:
+        print("BOOK ERROR:", e)
+
+    print("\n===== CLOTHING =====")
+
+    try:
+        c1 = Clothing(
+            "T-Shirt",
+            24.99,
+            0.3,
+            "L",
+            "Black"
+        )
+        print(c1)
+    except Exception as e:
+        print("CLOTHING ERROR:", e)
+
+    print("\n===== ELECTRONICS =====")
+
+    try:
+        e1 = Electronics(
+            "Laptop",
+            999.99,
+            2.5,
+            "Lenovo",
+            2
+        )
+        print(e1)
+    except Exception as e:
+        print("ELECTRONICS ERROR:", e)
+
+
+if __name__ == "__main__":
+    test_customers()
+    test_products()

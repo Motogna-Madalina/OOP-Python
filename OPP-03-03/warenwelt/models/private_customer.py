@@ -1,9 +1,11 @@
+from datetime import datetime
+ 
 from warenwelt.models.customer import Customer
 from warenwelt.utils.validator import Validator
-
-
+ 
+ 
 class PrivateCustomer(Customer):
-
+ 
     def __init__(
             self,
             name,
@@ -12,7 +14,7 @@ class PrivateCustomer(Customer):
             phone,
             password,
             birthdate):
-
+ 
         super().__init__(
             name,
             address,
@@ -20,85 +22,78 @@ class PrivateCustomer(Customer):
             phone,
             password
         )
-
-        if not Validator.validate_birthdate(
-                birthdate):
-            raise ValueError(
-                "Invalid birthdate"
-            )
-
+ 
+        if not Validator.validate_birthdate(birthdate):
+            raise ValueError("Invalid birthdate")
+ 
         self.birthdate = birthdate
-
+ 
     def calculate_age(self):
-
-        birth_year = int(
-            self.birthdate[-4:]
-        )
-
-        return 2025 - birth_year
-
+ 
+        birth_year = int(self.birthdate[-4:])
+ 
+        return datetime.now().year - birth_year
+ 
     def get_birthdate(self):
-
         return self.birthdate
-
+ 
     def set_birthdate(self, birthdate):
-
-        if Validator.validate_birthdate(
-                birthdate):
+        if Validator.validate_birthdate(birthdate):
             self.birthdate = birthdate
-
+ 
     def __str__(self):
-
         return (
             f"Private Customer: {self.name} | "
             f"Email: {self.email} | "
             f"Birthdate: {self.birthdate}"
         )
-    
-# =====================================
-# DATABASE METHODS
-# =====================================
-
-@staticmethod
-def save(storage, customer):
-
-    sql = """
-    INSERT INTO PrivateCustomers
-    (name, address, email, phone, password, birthdate)
-    VALUES (%s, %s, %s, %s, %s, %s)
-    """
-
-    values = (
-        customer.name,
-        customer.address,
-        customer.email,
-        customer.phone,
-        customer.password,
-        customer.birthdate
-    )
-
-    storage.query(sql, values)
-
-@staticmethod
-def load(storage, customer_id):
-
-    cursor = storage.query(
-        """
-        SELECT *
-        FROM PrivateCustomers
-        WHERE id_customer = %s
-        """,
-        (customer_id,)
-    )
-
-    return cursor.fetchone()
-
-@staticmethod
-def load_all(storage):
-
-    cursor = storage.query(
-        "SELECT * FROM PrivateCustomers"
-    )
-
-    return cursor.fetchall()
-    
+ 
+    # =====================================
+    # DATABASE METHODS (CRUD)
+    # =====================================
+ 
+    @staticmethod
+    def save(storage, private):
+ 
+        new_id = Customer.save(storage, private, "private")
+ 
+        storage.query(
+            """
+            INSERT INTO PrivateCustomers (id_customer, birthdate)
+            VALUES (%s, %s)
+            """,
+            (new_id, private.birthdate)
+        )
+ 
+        print("PRIVATE CUSTOMER SAVED")
+ 
+        return new_id
+ 
+    @staticmethod
+    def load(storage, id_customer):
+ 
+        cursor = storage.query(
+            """
+            SELECT c.*, p.birthdate
+            FROM Customers c
+            JOIN PrivateCustomers p ON c.id_customer = p.id_customer
+            WHERE c.id_customer = %s
+            """,
+            (id_customer,)
+        )
+ 
+        return cursor.fetchone()
+ 
+    @staticmethod
+    def load_all(storage):
+ 
+        cursor = storage.query(
+            """
+            SELECT c.*, p.birthdate
+            FROM Customers c
+            JOIN PrivateCustomers p ON c.id_customer = p.id_customer
+            """
+        )
+ 
+        return cursor.fetchall()
+ 

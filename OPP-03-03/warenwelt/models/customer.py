@@ -1,9 +1,9 @@
-from binascii import Error
+from abc import ABC, abstractmethod
 
 from warenwelt.utils.validator import Validator
 
 
-class Customer:
+class Customer(ABC):
 
     next_id = 1
 
@@ -36,7 +36,9 @@ class Customer:
         self.phone = phone
         self.password = password
 
-    # Getters
+    # =====================================
+    # GETTERS
+    # =====================================
 
     def get_name(self):
         return self.name
@@ -53,122 +55,82 @@ class Customer:
     def get_password(self):
         return self.password
 
-    # Setters
+    # =====================================
+    # SETTERS
+    # =====================================
 
     def set_name(self, name):
-
         if Validator.validate_name(name):
             self.name = name
 
     def set_address(self, address):
-
         if Validator.validate_address(address):
             self.address = address
 
     def set_email(self, email):
-
         if Validator.validate_email(email):
             self.email = email
 
     def set_phone(self, phone):
-
         if Validator.validate_phone(phone):
             self.phone = phone
 
     def set_password(self, password):
-
         self.password = password
 
+    # Metodo abstracto: cada subclase DEBE definir su propio __str__.
+    # Esto es lo que impide instanciar Customer directamente.
+    @abstractmethod
     def __str__(self):
-
-        return (
-            f"Customer: {self.name} | "
-            f"Email: {self.email} | "
-            f"Phone: {self.phone}"
-        )
+        pass
 
     # =====================================
-    # CUSTOMER METHODS
+    # DATABASE METHODS (CRUD)
     # =====================================
 
-    def save_customer(self, customer):
+    @staticmethod
+    def save(storage, customer, customer_type):
 
-        try:
-
-            cursor = self.connection.cursor()
-
-            sql = """
-            INSERT INTO Customers
-            (name, address, email, phone, password)
-            VALUES (%s, %s, %s, %s, %s)
+        cursor = storage.query(
             """
-
-            values = (
+            INSERT INTO Customers
+            (type, name, address, email, phone, password)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (
+                customer_type,
                 customer.name,
                 customer.address,
                 customer.email,
                 customer.phone,
                 customer.password
             )
+        )
 
-            cursor.execute(sql, values)
+        return cursor.lastrowid
 
-            self.connection.commit()
+    @staticmethod
+    def load(storage, customer_id):
 
-            print("CUSTOMER SAVED")
+        cursor = storage.query(
+            "SELECT * FROM Customers WHERE id_customer = %s",
+            (customer_id,)
+        )
 
-        except Error as e:
+        return cursor.fetchone()
 
-            self.connection.rollback()
+    @staticmethod
+    def load_all(storage):
 
-            print(f"DATABASE ERROR: {e}")
+        cursor = storage.query("SELECT * FROM Customers")
 
-    def load_customer(self, customer_id):
+        return cursor.fetchall()
 
-        try:
+    @staticmethod
+    def update(storage, customer_id, customer):
 
-            cursor = self.connection.cursor()
-
-            sql = """
-            SELECT *
-            FROM Customers
-            WHERE id_customer = %s
+        storage.query(
             """
-
-            cursor.execute(sql, (customer_id,))
-
-            return cursor.fetchone()
-
-        except Error as e:
-
-            print(f"DATABASE ERROR: {e}")
-
-    def load_all_customers(self):
-
-        try:
-
-            cursor = self.connection.cursor()
-
-            sql = """
-            SELECT *
-            FROM Customers
-            """
-
-            cursor.execute(sql)
-
-            return cursor.fetchall()
-
-        except Error as e:
-
-            print(f"DATABASE ERROR: {e}")
-
-    def update_customer(self, customer):
-
-        try:
-
-            cursor = self.connection.cursor()
-
-            sql = """
             UPDATE Customers
             SET
                 name=%s,
@@ -177,48 +139,25 @@ class Customer:
                 phone=%s,
                 password=%s
             WHERE id_customer=%s
-            """
-
-            values = (
+            """,
+            (
                 customer.name,
                 customer.address,
                 customer.email,
                 customer.phone,
                 customer.password,
-                customer.id_customer
+                customer_id
             )
+        )
 
-            cursor.execute(sql, values)
+        print("CUSTOMER UPDATED")
 
-            self.connection.commit()
+    @staticmethod
+    def delete(storage, customer_id):
 
-            print("CUSTOMER UPDATED")
+        storage.query(
+            "DELETE FROM Customers WHERE id_customer = %s",
+            (customer_id,)
+        )
 
-        except Error as e:
-
-            self.connection.rollback()
-
-            print(f"DATABASE ERROR: {e}")
-
-    def delete_customer(self, customer_id):
-
-        try:
-
-            cursor = self.connection.cursor()
-
-            sql = """
-            DELETE FROM Customers
-            WHERE id_customer = %s
-            """
-
-            cursor.execute(sql, (customer_id,))
-
-            self.connection.commit()
-
-            print("CUSTOMER DELETED")
-
-        except Error as e:
-
-            self.connection.rollback()
-
-            print(f"DATABASE ERROR: {e}")    
+        print("CUSTOMER DELETED")

@@ -51,33 +51,31 @@ class Storage:
 
             print(f"DATABASE ERROR: {e}")
 
+    # =====================================
+    # GENERIC QUERY METHOD
+    # =====================================
 
+    def query(self, sql, values=None):
 
+        try:
 
-# =====================================
-# GENERIC QUERY METHODS
-# =====================================
+            cursor = self.connection.cursor()
 
-def query(self, sql, values=None):
+            if values is not None:
 
-    try:
+                cursor.execute(sql, values)
 
-        cursor = self.connection.cursor()
+            else:
 
-        if values is not None:
+                cursor.execute(sql)
 
-            cursor.execute(sql, values)
+            self.connection.commit()
 
-        else:
+            return cursor
 
-            cursor.execute(sql)
+        except Error as e:
 
-        self.connection.commit()
+            self.connection.rollback()
 
-        return cursor
+            print(f"DATABASE ERROR: {e}")
 
-    except Error as e:
-
-        self.connection.rollback()
-
-        print(f"DATABASE ERROR: {e}")
