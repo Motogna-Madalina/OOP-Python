@@ -1,0 +1,46 @@
+CREATE DATABASE IF NOT EXISTS warenwelt;
+USE warenwelt;
+
+CREATE TABLE private_customers (
+id_private_customer INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+address VARCHAR(255) NOT NULL,
+email VARCHAR(100) NOT NULL,
+phone VARCHAR(30) NOT NULL,
+password VARCHAR(100) NOT NULL,
+birthdate DATE NOT NULL
+);
+
+CREATE TABLE company_customers (
+id_company_customer INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+address VARCHAR(255) NOT NULL,
+email VARCHAR(100) NOT NULL,
+phone VARCHAR(30) NOT NULL,
+password VARCHAR(100) NOT NULL,
+company_number VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE electronics (
+id_electronic INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+price DECIMAL(10,2) NOT NULL,
+brand VARCHAR(100) NOT NULL,
+warranty_years INT NOT NULL
+);
+
+CREATE TABLE clothing (
+id_clothing INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+price DECIMAL(10,2) NOT NULL,
+size VARCHAR(20) NOT NULL,
+color VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE books (
+id_book INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+price DECIMAL(10,2) NOT NULL,
+author VARCHAR(100) NOT NULL,
+page_count INT NOT NULL
+);

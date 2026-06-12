@@ -1,9 +1,0 @@
-WARENWELT INVOICE
-====================
-
-Date: 2026-06-09 13:16:07.415181
-
-iPhone - 999.99 EUR
-Python Programming - 39.99 EUR
-
-TOTAL: 987.98 EUR
