@@ -32,26 +32,12 @@ class Electronics(Product):
     def set_warranty_years(self, warranty_years):
         self.warranty_years = warranty_years
 
-    def save(self, storage):
-
-        storage.execute_query(
-            """
-            INSERT INTO electronics
-            (
-                name,
-                price,
-                brand,
-                warranty_years
-            )
-            VALUES (%s,%s,%s,%s)
-            """,
-            (
-                self.name,
-                self.price,
-                self.brand,
-                self.warranty_years
-            )
-        )
+    # ==================================================================
+    # >>> DATABASE METHODS (READ ELECTRONICS FROM MYSQL) <<<
+    # These methods ASK the database for electronics (SELECT).
+    # load()      -> get ONE item by its id  (returns one row)
+    # load_all()  -> get ALL items           (returns a list of rows)
+    # ==================================================================
 
     @staticmethod
     def load(storage, electronic_id):
@@ -60,45 +46,14 @@ class Electronics(Product):
             """
             SELECT *
             FROM electronics
-            WHERE id_electronic=%s
+            WHERE id_electronic=%s   -- only the item with this id
             """,
-            (electronic_id,)
-        ).fetchone()
+            (electronic_id,)         # value for %s (safe)
+        ).fetchone()                 # one row only
 
     @staticmethod
     def load_all(storage):
 
         return storage.execute_query(
-            "SELECT * FROM electronics"
-        ).fetchall()
-
-    def update(self, storage, electronic_id):
-
-        storage.execute_query(
-            """
-            UPDATE electronics
-            SET
-                name=%s,
-                price=%s,
-                brand=%s,
-                warranty_years=%s
-            WHERE id_electronic=%s
-            """,
-            (
-                self.name,
-                self.price,
-                self.brand,
-                self.warranty_years,
-                electronic_id
-            )
-        )
-
-    def delete(self, storage, electronic_id):
-
-        storage.execute_query(
-            """
-            DELETE FROM electronics
-            WHERE id_electronic=%s
-            """,
-            (electronic_id,)
-        )
+            "SELECT * FROM electronics"  # every electronic item
+        ).fetchall()                     # a list of rows

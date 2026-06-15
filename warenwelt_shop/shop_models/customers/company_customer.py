@@ -53,25 +53,31 @@ class CompanyCustomer(Customer):
 
     # DATABASE METHODS
 
+    # ==================================================================
+    # >>> SAVE THIS COMPANY INTO MYSQL <<<
+    # This WRITES the company customer as a new row (INSERT).
+    # This is the part that really saves the data in the database.
+    # ==================================================================
+
     def save(
             self,
             storage
     ):
 
         query = """
-        INSERT INTO company_customers
+        INSERT INTO company_customers      -- add a new row
         (
-            name,
+            name,                          -- columns to fill
             address,
             email,
             phone,
             password,
             company_number
         )
-        VALUES (%s,%s,%s,%s,%s,%s)
+        VALUES (%s,%s,%s,%s,%s,%s)         -- one value per column
         """
 
-        values = (
+        values = (                         # the real values, same order
             self.name,
             self.address,
             self.email,
@@ -85,80 +91,37 @@ class CompanyCustomer(Customer):
             values
         )
 
+    # ==================================================================
+    # >>> READ COMPANY CUSTOMERS FROM MYSQL <<<
+    # load()      -> get ONE company by email   (one row)
+    # load_all()  -> get ALL company customers  (a list of rows)
+    # ==================================================================
+
     @staticmethod
     def load(
             storage,
-            customer_id
+            email
     ):
 
         query = """
         SELECT *
         FROM company_customers
-        WHERE id_company_customer = %s
+        WHERE email = %s                   -- only the company with this email
         """
 
         return storage.execute_query(
             query,
-            (customer_id,)
-        ).fetchone()
+            (email,)                       # value for %s (safe)
+        ).fetchone()                       # one row only
 
     @staticmethod
     def load_all(storage):
 
         query = """
         SELECT *
-        FROM company_customers
+        FROM company_customers             -- every company customer
         """
 
         return storage.execute_query(
             query
-        ).fetchall()
-
-    def update(
-            self,
-            storage,
-            customer_id
-    ):
-
-        query = """
-        UPDATE company_customers
-        SET
-            name=%s,
-            address=%s,
-            email=%s,
-            phone=%s,
-            password=%s,
-            company_number=%s
-        WHERE id_company_customer=%s
-        """
-
-        values = (
-            self.name,
-            self.address,
-            self.email,
-            self.phone,
-            self.password,
-            self.company_number,
-            customer_id
-        )
-
-        storage.execute_query(
-            query,
-            values
-        )
-
-    def delete(
-            self,
-            storage,
-            customer_id
-    ):
-
-        query = """
-        DELETE FROM company_customers
-        WHERE id_company_customer=%s
-        """
-
-        storage.execute_query(
-            query,
-            (customer_id,)
-        )
+        ).fetchall()                       # a list of rows

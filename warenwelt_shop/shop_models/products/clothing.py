@@ -32,26 +32,12 @@ class Clothing(Product):
     def set_color(self, color):
         self.color = color
 
-    def save(self, storage):
-
-        storage.execute_query(
-            """
-            INSERT INTO clothing
-            (
-                name,
-                price,
-                size,
-                color
-            )
-            VALUES (%s,%s,%s,%s)
-            """,
-            (
-                self.name,
-                self.price,
-                self.size,
-                self.color
-            )
-        )
+    # ==================================================================
+    # >>> DATABASE METHODS (READ CLOTHING FROM MYSQL) <<<
+    # These methods ASK the database for clothing (SELECT).
+    # load()      -> get ONE item by its id  (returns one row)
+    # load_all()  -> get ALL items           (returns a list of rows)
+    # ==================================================================
 
     @staticmethod
     def load(storage, clothing_id):
@@ -60,45 +46,14 @@ class Clothing(Product):
             """
             SELECT *
             FROM clothing
-            WHERE id_clothing=%s
+            WHERE id_clothing=%s     -- only the item with this id
             """,
-            (clothing_id,)
-        ).fetchone()
+            (clothing_id,)           # value for %s (safe)
+        ).fetchone()                 # one row only
 
     @staticmethod
     def load_all(storage):
 
         return storage.execute_query(
-            "SELECT * FROM clothing"
-        ).fetchall()
-
-    def update(self, storage, clothing_id):
-
-        storage.execute_query(
-            """
-            UPDATE clothing
-            SET
-                name=%s,
-                price=%s,
-                size=%s,
-                color=%s
-            WHERE id_clothing=%s
-            """,
-            (
-                self.name,
-                self.price,
-                self.size,
-                self.color,
-                clothing_id
-            )
-        )
-
-    def delete(self, storage, clothing_id):
-
-        storage.execute_query(
-            """
-            DELETE FROM clothing
-            WHERE id_clothing=%s
-            """,
-            (clothing_id,)
-        )
+            "SELECT * FROM clothing"  # every clothing item
+        ).fetchall()                  # a list of rows

@@ -68,6 +68,12 @@ class PrivateCustomer(Customer):
 
     # DATABASE METHODS
 
+    # ==================================================================
+    # >>> SAVE THIS CUSTOMER INTO MYSQL <<<
+    # This WRITES the customer as a new row (INSERT).
+    # This is the part that really saves the data in the database.
+    # ==================================================================
+
     def save(
             self,
             storage
@@ -75,18 +81,18 @@ class PrivateCustomer(Customer):
 
         storage.execute_query(
             """
-            INSERT INTO private_customers
+            INSERT INTO private_customers     -- add a new row
             (
-                name,
+                name,                         -- columns to fill
                 address,
                 email,
                 phone,
                 password,
                 birthdate
             )
-            VALUES (%s,%s,%s,%s,%s,%s)
+            VALUES (%s,%s,%s,%s,%s,%s)        -- one value per column
             """,
-            (
+            (                                 # the real values, same order
                 self.name,
                 self.address,
                 self.email,
@@ -96,20 +102,26 @@ class PrivateCustomer(Customer):
             )
         )
 
+    # ==================================================================
+    # >>> READ CUSTOMERS FROM MYSQL <<<
+    # load()      -> get ONE customer by email  (one row)
+    # load_all()  -> get ALL private customers  (a list of rows)
+    # ==================================================================
+
     @staticmethod
     def load(
             storage,
-            customer_id
+            email
     ):
 
         return storage.execute_query(
             """
             SELECT *
             FROM private_customers
-            WHERE id_private_customer=%s
+            WHERE email=%s             -- only the customer with this email
             """,
-            (customer_id,)
-        ).fetchone()
+            (email,)                   # value for %s (safe)
+        ).fetchone()                   # one row only
 
     @staticmethod
     def load_all(storage):
@@ -117,49 +129,6 @@ class PrivateCustomer(Customer):
         return storage.execute_query(
             """
             SELECT *
-            FROM private_customers
+            FROM private_customers     -- every private customer
             """
-        ).fetchall()
-
-    def update(
-            self,
-            storage,
-            customer_id
-    ):
-
-        storage.execute_query(
-            """
-            UPDATE private_customers
-            SET
-                name=%s,
-                address=%s,
-                email=%s,
-                phone=%s,
-                password=%s,
-                birthdate=%s
-            WHERE id_private_customer=%s
-            """,
-            (
-                self.name,
-                self.address,
-                self.email,
-                self.phone,
-                self.password,
-                self.birthdate,
-                customer_id
-            )
-        )
-
-    def delete(
-            self,
-            storage,
-            customer_id
-    ):
-
-        storage.execute_query(
-            """
-            DELETE FROM private_customers
-            WHERE id_private_customer=%s
-            """,
-            (customer_id,)
-        )
+        ).fetchall()                   # a list of rows

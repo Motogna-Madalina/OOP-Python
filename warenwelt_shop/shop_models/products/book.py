@@ -32,26 +32,12 @@ class Book(Product):
     def set_page_count(self, page_count):
         self.page_count = page_count
 
-    def save(self, storage):
-
-        storage.execute_query(
-            """
-            INSERT INTO books
-            (
-                name,
-                price,
-                author,
-                page_count
-            )
-            VALUES (%s,%s,%s,%s)
-            """,
-            (
-                self.name,
-                self.price,
-                self.author,
-                self.page_count
-            )
-        )
+    # ==================================================================
+    # >>> DATABASE METHODS (READ BOOKS FROM MYSQL) <<<
+    # These methods ASK the database for books (SELECT).
+    # load()      -> get ONE book by its id  (returns one row)
+    # load_all()  -> get ALL books           (returns a list of rows)
+    # ==================================================================
 
     @staticmethod
     def load(storage, book_id):
@@ -60,45 +46,14 @@ class Book(Product):
             """
             SELECT *
             FROM books
-            WHERE id_book=%s
+            WHERE id_book=%s         -- only the book with this id
             """,
-            (book_id,)
-        ).fetchone()
+            (book_id,)               # value for %s (safe)
+        ).fetchone()                 # one row only
 
     @staticmethod
     def load_all(storage):
 
         return storage.execute_query(
-            "SELECT * FROM books"
-        ).fetchall()
-
-    def update(self, storage, book_id):
-
-        storage.execute_query(
-            """
-            UPDATE books
-            SET
-                name=%s,
-                price=%s,
-                author=%s,
-                page_count=%s
-            WHERE id_book=%s
-            """,
-            (
-                self.name,
-                self.price,
-                self.author,
-                self.page_count,
-                book_id
-            )
-        )
-
-    def delete(self, storage, book_id):
-
-        storage.execute_query(
-            """
-            DELETE FROM books
-            WHERE id_book=%s
-            """,
-            (book_id,)
-        )
+            "SELECT * FROM books"    # every book
+        ).fetchall()                 # a list of rows
