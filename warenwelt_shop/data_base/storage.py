@@ -127,3 +127,16 @@ class Storage:
             # paths (ShopRepository._query / load_catalog) catch this and
             # fall back; register() turns it into a clear user message.
             raise
+
+
+DB_HOST = "127.0.0.1"
+DB_USER = "root"
+DB_PASSWORD = "Motogna6624."
+DB_NAME = "warenwelt"
+DB_PORT = 3306
+
+
+def connect_warenwelt():
+    storage = Storage(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT)
+    storage.connect()
+    return storage

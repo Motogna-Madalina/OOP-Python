@@ -26,9 +26,6 @@ class Electronics(Product):
     def category(self):
         return "Electronics"
 
-    def short_detail(self):
-        return f"{self.brand}, {self.warranty_years}y warranty"
-
     def get_brand(self):
         return self.brand
 

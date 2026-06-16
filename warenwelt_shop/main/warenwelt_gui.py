@@ -43,15 +43,6 @@ from shop_models.customers.company_customer import CompanyCustomer  # ⭐ Compan
 from orders.shopping_cart import ShoppingCart  # ⭐ ShoppingCart
 from utils.validator import Validator  # ⭐ Validator
 
-# ----------------------------------------------------------------------
-# DATABASE LOGIN DATA
-# Change these values to match your own MySQL server if needed.
-# ----------------------------------------------------------------------
-DB_HOST = "127.0.0.1"  # where MySQL is (this same computer)
-DB_USER = "root"  # the MySQL user name
-DB_PASSWORD = "Motogna6624."  # the MySQL password
-DB_NAME = "warenwelt"  # the database name
-DB_PORT = 3306  # the MySQL port
 
 # ----------------------------------------------------------------------
 # COLORS (the green "GreenWorld" palette)
@@ -109,20 +100,14 @@ class ShopApp(tk.Tk):
 
         self.show_login()
 
-    # ==================================================================
-    #  DATA ACCESS  (this is what connects the GUI to the rest)
-    # ==================================================================
     def connect_db(self):
-        # Try to open MySQL using your Storage class. If anything fails
-        # (no server, no library, wrong password) we return None and the
-        # app simply runs offline.
+        # All the login data now lives in storage.py, in one place.
+        # We just ask connect_warenwelt() for a Storage already connected.
+        # If anything fails (no server, no library, wrong password) we
+        # return None and the app simply runs offline.
         try:
-            from data_base.storage import Storage  # <-- ⭐ Storage
-            storage = Storage(host=DB_HOST, user=DB_USER,  # <-- ⭐ Storage
-                              password=DB_PASSWORD,
-                              database=DB_NAME, port=DB_PORT)
-            storage.connect()  # <-- ⭐ Storage.connect()
-            return storage
+            from data_base.storage import connect_warenwelt  # <-- ⭐ Storage
+            return connect_warenwelt()  # <-- ⭐ Storage.connect()
         except Exception:
             return None
 

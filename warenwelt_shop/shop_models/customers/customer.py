@@ -37,7 +37,6 @@ class Customer(ABC):
 
     @abstractmethod
     def discount_rate(self):
-        """Fraction (0.0 - 1.0) taken off the order total."""
         raise NotImplementedError
 
     # Getters

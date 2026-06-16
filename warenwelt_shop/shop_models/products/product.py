@@ -31,12 +31,6 @@ class Product(ABC):
     @property
     @abstractmethod
     def category(self):
-        """Human-readable category name, e.g. 'Books'."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def short_detail(self):
-        """One short line describing the product's specific fields."""
         raise NotImplementedError
 
     # Getters
