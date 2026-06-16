@@ -20,6 +20,15 @@ class Clothing(Product):
         self.size = size
         self.color = color
 
+    # Implementation of the abstract Product contract.
+
+    @property
+    def category(self):
+        return "Clothing"
+
+    def short_detail(self):
+        return f"size {self.size}, {self.color}"
+
     def get_size(self):
         return self.size
 
@@ -34,9 +43,6 @@ class Clothing(Product):
 
     # ==================================================================
     # >>> DATABASE METHODS (READ CLOTHING FROM MYSQL) <<<
-    # These methods ASK the database for clothing (SELECT).
-    # load()      -> get ONE item by its id  (returns one row)
-    # load_all()  -> get ALL items           (returns a list of rows)
     # ==================================================================
 
     @staticmethod
@@ -46,14 +52,14 @@ class Clothing(Product):
             """
             SELECT *
             FROM clothing
-            WHERE id_clothing=%s     -- only the item with this id
+            WHERE id_clothing=%s
             """,
-            (clothing_id,)           # value for %s (safe)
-        ).fetchone()                 # one row only
+            (clothing_id,)
+        ).fetchone()
 
     @staticmethod
     def load_all(storage):
 
         return storage.execute_query(
-            "SELECT * FROM clothing"  # every clothing item
-        ).fetchall()                  # a list of rows
+            "SELECT * FROM clothing"
+        ).fetchall()

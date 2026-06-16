@@ -17,8 +17,13 @@ class Validator:
 
     @staticmethod
     def validate_phone(phone):
+        # Allow common separators: +, spaces, dashes, slashes, dots and
+        # parentheses. After removing them, the number must be 8-20 digits
+        # with an optional leading +.  So "+43 664 1234567" and "0664/1234567"
+        # are both accepted.
+        cleaned = re.sub(r'[\s\-/().]', '', phone)
         pattern = r'^\+?\d{8,20}$'
-        return bool(re.match(pattern, phone))
+        return bool(re.match(pattern, cleaned))
 
     @staticmethod
     def validate_name(name):

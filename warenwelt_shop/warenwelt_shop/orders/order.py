@@ -6,7 +6,6 @@ This class represents an order.
 import os
 from datetime import datetime
 
-from shop_models.customers.company_customer import CompanyCustomer
 
 class Order:
 
@@ -20,13 +19,13 @@ class Order:
         self.total_amount = self.calculate_total()
 
     def calculate_total(self):
-        # Add the price of all products to get the total. Company customers
-        # get a 5% discount, so for them we pay only 95% of the price. We
-        # return the total so we can save it in self.total_amount.
+        # Add the price of all products to get the total, then apply the
+        # customer's own discount. Each customer type decides its rate via
+        # discount_rate() (0% for private, 5% for company), so this method
+        # never needs to know which concrete customer class it is dealing
+        # with. We return the total so we can save it in self.total_amount.
         total = sum(product.price for product in self.products)
-        # Company customers get a 5% discount.
-        if isinstance(self.customer, CompanyCustomer):
-            total = total * 0.95
+        total = total * (1 - self.customer.discount_rate())
         return total
 
     def create_invoice(self):

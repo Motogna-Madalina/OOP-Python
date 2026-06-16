@@ -20,6 +20,15 @@ class Electronics(Product):
         self.brand = brand
         self.warranty_years = warranty_years
 
+    # Implementation of the abstract Product contract.
+
+    @property
+    def category(self):
+        return "Electronics"
+
+    def short_detail(self):
+        return f"{self.brand}, {self.warranty_years}y warranty"
+
     def get_brand(self):
         return self.brand
 
@@ -34,9 +43,6 @@ class Electronics(Product):
 
     # ==================================================================
     # >>> DATABASE METHODS (READ ELECTRONICS FROM MYSQL) <<<
-    # These methods ASK the database for electronics (SELECT).
-    # load()      -> get ONE item by its id  (returns one row)
-    # load_all()  -> get ALL items           (returns a list of rows)
     # ==================================================================
 
     @staticmethod
@@ -46,14 +52,14 @@ class Electronics(Product):
             """
             SELECT *
             FROM electronics
-            WHERE id_electronic=%s   -- only the item with this id
+            WHERE id_electronic=%s
             """,
-            (electronic_id,)         # value for %s (safe)
-        ).fetchone()                 # one row only
+            (electronic_id,)
+        ).fetchone()
 
     @staticmethod
     def load_all(storage):
 
         return storage.execute_query(
-            "SELECT * FROM electronics"  # every electronic item
-        ).fetchall()                     # a list of rows
+            "SELECT * FROM electronics"
+        ).fetchall()

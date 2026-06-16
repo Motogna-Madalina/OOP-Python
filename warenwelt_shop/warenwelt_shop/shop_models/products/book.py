@@ -20,6 +20,15 @@ class Book(Product):
         self.author = author
         self.page_count = page_count
 
+    # Implementation of the abstract Product contract.
+
+    @property
+    def category(self):
+        return "Books"
+
+    def short_detail(self):
+        return f"by {self.author}, {self.page_count} pages"
+
     def get_author(self):
         return self.author
 
@@ -34,7 +43,6 @@ class Book(Product):
 
     # ==================================================================
     # >>> DATABASE METHODS (READ BOOKS FROM MYSQL) <<<
-    # These methods ASK the database for books (SELECT).
     # load()      -> get ONE book by its id  (returns one row)
     # load_all()  -> get ALL books           (returns a list of rows)
     # ==================================================================
@@ -46,14 +54,14 @@ class Book(Product):
             """
             SELECT *
             FROM books
-            WHERE id_book=%s         -- only the book with this id
+            WHERE id_book=%s
             """,
-            (book_id,)               # value for %s (safe)
-        ).fetchone()                 # one row only
+            (book_id,)
+        ).fetchone()
 
     @staticmethod
     def load_all(storage):
 
         return storage.execute_query(
-            "SELECT * FROM books"    # every book
-        ).fetchall()                 # a list of rows
+            "SELECT * FROM books"
+        ).fetchall()

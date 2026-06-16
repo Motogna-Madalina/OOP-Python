@@ -30,6 +30,10 @@ class CompanyCustomer(Customer):
             company_number
         )
 
+    # Company customers get a 5% discount on the order total.
+    def discount_rate(self):
+        return 0.05
+
     # GETTERS
 
     def get_company_number(self):
@@ -53,31 +57,25 @@ class CompanyCustomer(Customer):
 
     # DATABASE METHODS
 
-    # ==================================================================
-    # >>> SAVE THIS COMPANY INTO MYSQL <<<
-    # This WRITES the company customer as a new row (INSERT).
-    # This is the part that really saves the data in the database.
-    # ==================================================================
-
     def save(
             self,
             storage
     ):
 
         query = """
-        INSERT INTO company_customers      -- add a new row
+        INSERT INTO company_customers
         (
-            name,                          -- columns to fill
+            name,
             address,
             email,
             phone,
             password,
             company_number
         )
-        VALUES (%s,%s,%s,%s,%s,%s)         -- one value per column
+        VALUES (%s,%s,%s,%s,%s,%s)
         """
 
-        values = (                         # the real values, same order
+        values = (
             self.name,
             self.address,
             self.email,
@@ -91,12 +89,6 @@ class CompanyCustomer(Customer):
             values
         )
 
-    # ==================================================================
-    # >>> READ COMPANY CUSTOMERS FROM MYSQL <<<
-    # load()      -> get ONE company by email   (one row)
-    # load_all()  -> get ALL company customers  (a list of rows)
-    # ==================================================================
-
     @staticmethod
     def load(
             storage,
@@ -106,22 +98,22 @@ class CompanyCustomer(Customer):
         query = """
         SELECT *
         FROM company_customers
-        WHERE email = %s                   -- only the company with this email
+        WHERE email = %s
         """
 
         return storage.execute_query(
             query,
-            (email,)                       # value for %s (safe)
-        ).fetchone()                       # one row only
+            (email,)
+        ).fetchone()
 
     @staticmethod
     def load_all(storage):
 
         query = """
         SELECT *
-        FROM company_customers             -- every company customer
+        FROM company_customers
         """
 
         return storage.execute_query(
             query
-        ).fetchall()                       # a list of rows
+        ).fetchall()

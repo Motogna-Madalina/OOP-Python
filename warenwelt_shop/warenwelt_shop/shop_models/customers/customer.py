@@ -1,13 +1,18 @@
 """
-This class represents a customer.
-It stores basic customer information.
-It also uses getters and setters.
+This abstract class represents a customer.
+It stores basic customer information and uses getters/setters.
+
+It is abstract now: PrivateCustomer and CompanyCustomer must each
+define their own discount_rate(). That single method replaces the
+isinstance() checks that used to decide the company discount.
 """
+
+from abc import ABC, abstractmethod
 
 from utils.validator import Validator
 
 
-class Customer:
+class Customer(ABC):
 
     # Class variable shared by all customers.
     # It remembers the last id that was given out.
@@ -23,6 +28,17 @@ class Customer:
         self.set_email(email)
         self.set_phone(phone)
         self.set_password(password)
+
+    # ------------------------------------------------------------------
+    # Abstract contract: each customer type decides its own discount.
+    # The shop, the cart and the order all call this single method
+    # instead of checking the customer's type by hand.
+    # ------------------------------------------------------------------
+
+    @abstractmethod
+    def discount_rate(self):
+        """Fraction (0.0 - 1.0) taken off the order total."""
+        raise NotImplementedError
 
     # Getters
 
