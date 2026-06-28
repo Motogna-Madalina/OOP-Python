@@ -40,3 +40,45 @@ class Validator:
     @staticmethod
     def validate_password(password):
         return len(password) >= 8
+
+ #product validation------------------------------------------------------------
+
+    @staticmethod
+    def validate_text(text):
+
+        if not text:
+            return False
+        pattern = r"^[A-Za-zÄÖÜäöüß0-9\s\-'&.,/]+$"
+        return bool(re.match(pattern, str(text)))
+
+    @staticmethod
+    def validate_color(color):
+
+        if not color:
+            return False
+        pattern = r"^[A-Za-zÄÖÜäöüß\s\-]+$"
+        return bool(re.match(pattern, str(color)))
+
+    @staticmethod
+    def validate_price(price):
+        pattern = r'^\d+(\.\d+)?$'
+        return bool(re.match(pattern, str(price)))
+
+    @staticmethod
+    def validate_weight(weight):
+        pattern = r'^\d+(\.\d+)?$'
+        if re.match(pattern, str(weight)):
+            return float(weight) > 0
+        return False
+
+    @staticmethod
+    def validate_pages(pages):
+        pattern = r'^\d+$'
+        if re.match(pattern, str(pages)):
+            return int(pages) > 0
+        return False
+
+    @staticmethod
+    def validate_warranty_years(years):
+        pattern = r'^\d+$'
+        return bool(re.match(pattern, str(years)))

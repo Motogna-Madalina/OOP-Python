@@ -3,7 +3,8 @@ from exceptions.shop_error import ShopError
 
 
 class Customer:
-    #_id_counter = 0
+
+    #_id_counter = 0 #how it would bee to make the auto-generiert number
     def __init__(self, name, address, email, phone, password):
 
         self._id = None
