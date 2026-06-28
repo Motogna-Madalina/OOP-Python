@@ -1,0 +1,2 @@
+class ShopError(Exception):
+    pass

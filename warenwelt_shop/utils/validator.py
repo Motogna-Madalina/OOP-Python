@@ -1,33 +1,22 @@
-"""
-This class validates customer information.
-It checks email, phone number, name, address,
-birth date and company number.
-"""
 
 import re
 from datetime import datetime
-
 
 class Validator:
 
     @staticmethod
     def validate_email(email):
-        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        pattern = r'^[\w.-]+@[\w.-]+\.\w+$'
         return bool(re.match(pattern, email))
 
     @staticmethod
     def validate_phone(phone):
-        # Allow common separators: +, spaces, dashes, slashes, dots and
-        # parentheses. After removing them, the number must be 8-20 digits
-        # with an optional leading +.  So "+43 664 1234567" and "0664/1234567"
-        # are both accepted.
-        cleaned = re.sub(r'[\s\-/().]', '', phone)
         pattern = r'^\+?\d{8,20}$'
-        return bool(re.match(pattern, cleaned))
+        return bool(re.match(pattern, phone))
 
     @staticmethod
     def validate_name(name):
-        pattern = r'^[A-Za-zÄÖÜäöüß\s\-]+$'
+        pattern = r"^[A-Za-zÄÖÜäöüß\s\-']+$"
         return bool(re.match(pattern, name))
 
     @staticmethod
@@ -38,12 +27,16 @@ class Validator:
     @staticmethod
     def validate_birthdate(birthdate):
         try:
-            datetime.strptime(birthdate, "%d.%m.%Y")
-            return True
+            date_obj = datetime.strptime(birthdate, "%d.%m.%Y").date()
         except ValueError:
             return False
+        return date_obj <= datetime.now().date()
 
     @staticmethod
-    def validate_company_number(company_number):
+    def validate_company_id(company_id):
         pattern = r'^\d{5,15}$'
-        return bool(re.match(pattern, company_number))
+        return bool(re.match(pattern, str(company_id)))
+
+    @staticmethod
+    def validate_password(password):
+        return len(password) >= 8
