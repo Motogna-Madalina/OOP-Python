@@ -5,7 +5,7 @@ from models_shop.customers.private_customer import PrivateCustomer
 from models_shop.customers.company_customer import CompanyCustomer
 
 
-# 1) A private customer with correct data
+#a private customer with correct data
 private = PrivateCustomer(
     "Anna Müller", "Hauptstraße 1, Wien", "anna@example.com",
     "+436641234567", "geheim123", "23.04.1995"
@@ -25,3 +25,4 @@ try:
                     "12345678", "passwort1", "01.01.1990")
 except ShopError as error:
     print("Fehler abgefangen:", error)
+
