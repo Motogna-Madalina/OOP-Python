@@ -71,3 +71,139 @@ class Customer:
         if not Validator.validate_password(password):
             raise ShopError("Passwort muss mindestens 8 Zeichen haben.")
         self._password = password
+
+
+
+    #====================================================================================================
+
+
+
+    # SAVE BASE CUSTOMER (a half of it)
+    #______________________________________________________________________________
+    def save_base(self, storage):
+
+        query = """
+        INSERT INTO customer (name, address, email, phone, password)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+
+
+        #commit=Fals this INSERT ist only the first half of the customer
+        #we let the transaction open and we will make commit at the end
+
+        return storage.execute_query(
+            query,
+            (
+                self.get_name(),
+                self.get_address(),
+                self.get_email(),
+                self.get_phone(),
+                self.get_password()
+            ),
+            commit=False
+        )
+
+
+
+
+    @staticmethod
+    def load(storage, customer_id):
+        from models_shop.customers.private_customer import PrivateCustomer
+        from models_shop.customers.company_customer import CompanyCustomer
+
+        #----------------------------------------------------------------
+        # CUSTOMER
+
+
+        query = """
+                SELECT *
+                FROM customer
+                WHERE id = %s \
+                """
+
+        result = storage.fetch_query(query, (customer_id,))
+
+        if not result:
+            return None
+
+        customer = result[0]
+
+        #----------------------------------------------------------------
+        # PRIVATE CUSTOMER
+
+
+        query = """
+                SELECT *
+                FROM private_customer
+                WHERE customer_id = %s \
+                """
+
+        result = storage.fetch_query(query, (customer_id,))
+
+        if result:
+            private_customer = result[0]
+
+            customer_object = PrivateCustomer(
+                customer["name"],
+                customer["address"],
+                customer["email"],
+                customer["phone"],
+                customer["password"],
+                private_customer["birthdate"].strftime("%d.%m.%Y")
+            )
+
+            customer_object._id = customer["id"]
+
+            return customer_object
+
+        #----------------------------------------------------------------
+        # COMPANY CUSTOMER
+
+
+        query = """
+                SELECT *
+                FROM company_customer
+                WHERE customer_id = %s \
+                """
+
+        result = storage.fetch_query(query, (customer_id,))
+
+        if result:
+            company_customer = result[0]
+
+            customer_object = CompanyCustomer(
+                customer["name"],
+                customer["address"],
+                customer["email"],
+                customer["phone"],
+                customer["password"],
+                company_customer["company_id"]
+            )
+
+            customer_object._id = customer["id"]
+
+            return customer_object
+
+        return None
+
+    @staticmethod
+    def load_all(storage):
+
+        query = """
+        SELECT id
+        FROM customer
+        ORDER BY id
+        """
+
+        results = storage.fetch_query(query)
+
+        customers = []
+
+        for row in results:
+
+            customer = Customer.load(storage, row["id"])
+
+            if customer:
+                customers.append(customer)
+
+        return customers

@@ -35,3 +35,4 @@ class Electronic(Product):
         if not Validator.validate_warranty_years(years):
             raise ShopError(f"Ungültige Garantie (Jahre, muss >= 0 sein): {years}")
         self._warranty_years = years
+

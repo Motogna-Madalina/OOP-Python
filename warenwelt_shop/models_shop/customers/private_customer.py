@@ -14,6 +14,9 @@ class PrivateCustomer(Customer):
         self._birthdate = None
         self.set_birthdate(birthdate)
 
+    def get_type(self):
+        return "private"
+
     def get_birthdate(self):
         return self._birthdate
 
@@ -33,3 +36,39 @@ class PrivateCustomer(Customer):
         elif today.month == birth.month and today.day < birth.day:
             age = age - 1
         return age
+
+#=====================================================================================================
+    #SAVE
+    def save(self, storage):
+
+
+        try:
+
+            customer_id = self.save_base(storage)
+
+            query = """
+                    INSERT INTO private_customer (customer_id, birthdate)
+                    VALUES (%s, %s) \
+                    """
+
+            storage.execute_query(
+                query,
+                (
+                    customer_id,
+                    datetime.strptime(
+                        self.get_birthdate(),
+                        "%d.%m.%Y"
+                    ).date()
+                ),
+                commit=False
+            )
+
+            storage.commit()
+        except Exception:
+
+            #if anything went wrong - wer make undo for BOTH inserts and there is no orphan customer
+            storage.rollback()
+            raise
+
+        self._id = customer_id
+        print(f"Kunde {self.get_name()} wurde gespeichert (ID {customer_id}).")

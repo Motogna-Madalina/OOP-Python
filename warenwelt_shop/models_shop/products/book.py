@@ -33,3 +33,4 @@ class Book(Product):
         if not Validator.validate_pages(pages):
             raise ShopError(f"Ungültige Seitenanzahl (muss > 0 sein): {pages}")
         self._pages = pages
+

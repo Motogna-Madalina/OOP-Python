@@ -1,0 +1,129 @@
+<mxfile host="app.diagrams.net" agent="WarenWelt">
+  <diagram id="flow1" name="Benutzerfluss">
+    <mxGraphModel dx="1858" dy="1025" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Start" vertex="1">
+          <mxGeometry height="60" width="120" x="390" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="connect" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Connect Storage&#xa;(MySQL?)" vertex="1">
+          <mxGeometry height="70" width="220" x="340" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="decision1" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Connection successful?" vertex="1">
+          <mxGeometry height="90" width="170" x="365" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="offline" parent="1" style="rounded=1;" value="Offline Mode" vertex="1">
+          <mxGeometry height="60" width="170" x="120" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="online" parent="1" style="rounded=1;" value="Load Products&#xa;from Database" vertex="1">
+          <mxGeometry height="60" width="180" x="560" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="login" parent="1" style="rounded=1;" value="Login Screen" vertex="1">
+          <mxGeometry height="70" width="220" x="340" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="decision2" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Login?" vertex="1">
+          <mxGeometry height="90" width="140" x="380" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="register" parent="1" style="rounded=1;" value="Register Customer&#xa;Neu Customer" vertex="1">
+          <mxGeometry height="70" width="190" x="120" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="validator" parent="1" style="rounded=1;" value="Validator" vertex="1">
+          <mxGeometry height="60" width="190" x="120" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="shop" parent="1" style="rounded=1;" value="Shop" vertex="1">
+          <mxGeometry height="70" width="180" x="580" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="browse" parent="1" style="rounded=1;" value="Browse Products&#xa;Filter / Sort" vertex="1">
+          <mxGeometry height="70" width="190" x="580" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="cart" parent="1" style="rounded=1;" value="Add to Cart" vertex="1">
+          <mxGeometry height="70" width="190" x="580" y="1050" as="geometry" />
+        </mxCell>
+        <mxCell id="viewcart" parent="1" style="rounded=1;" value="View Cart" vertex="1">
+          <mxGeometry height="70" width="190" x="580" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="decision3" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Checkout?" vertex="1">
+          <mxGeometry height="90" width="150" x="600" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="order" parent="1" style="rounded=1;" value="Create Order&#xa;Generate Invoice" vertex="1">
+          <mxGeometry height="80" width="190" x="580" y="1450" as="geometry" />
+        </mxCell>
+        <mxCell id="logout" parent="1" style="rounded=1;" value="Logout" vertex="1">
+          <mxGeometry height="60" width="140" x="890" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--1" edge="1" parent="1" source="start" target="connect">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--2" edge="1" parent="1" source="connect" target="decision1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--3" edge="1" parent="1" source="decision1" target="offline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--20" connectable="0" parent="OFhM70s5yjDOz0Xv8hK--3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NEIN" vertex="1">
+          <mxGeometry relative="1" x="-0.1619" y="-2" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--4" edge="1" parent="1" source="decision1" target="online">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--21" connectable="0" parent="OFhM70s5yjDOz0Xv8hK--4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="JA" vertex="1">
+          <mxGeometry relative="1" x="-0.0942" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--5" edge="1" parent="1" source="offline" target="login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--6" edge="1" parent="1" source="online" target="login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--7" edge="1" parent="1" source="login" target="decision2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--8" edge="1" parent="1" source="decision2" target="register">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--23" connectable="0" parent="OFhM70s5yjDOz0Xv8hK--8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="NEIN" vertex="1">
+          <mxGeometry relative="1" x="-0.262" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--9" edge="1" parent="1" source="register" target="validator">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--11" edge="1" parent="1" source="decision2" target="shop">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--22" connectable="0" parent="OFhM70s5yjDOz0Xv8hK--11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="JA" vertex="1">
+          <mxGeometry relative="1" x="-0.1956" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--12" edge="1" parent="1" source="shop" target="browse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--13" edge="1" parent="1" source="browse" target="cart">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--14" edge="1" parent="1" source="cart" target="viewcart">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--15" edge="1" parent="1" source="viewcart" target="decision3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--16" edge="1" parent="1" source="decision3" target="order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--18" edge="1" parent="1" source="shop" target="logout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OFhM70s5yjDOz0Xv8hK--19" edge="1" parent="1" source="logout" target="login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

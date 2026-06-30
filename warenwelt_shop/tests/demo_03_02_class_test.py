@@ -1,6 +1,8 @@
-from models_shop.products.book import *
-from models_shop.products.electronic import *
-from models_shop.products.clothing import *
+from exceptions.shop_error import ShopError
+
+from models_shop.products.book import Book
+from models_shop.products.electronic import Electronic
+from models_shop.products.clothing import Clothing
 
 # Two products----------------------------------------------------------------------------------
 laptop = Electronic("Laptop X1", 999.99, 1.5, "Lenovo", 2)
@@ -15,6 +17,6 @@ try:
 except ShopError as error:
     print("Fehler:", error)
 
-clothing = Clothing("T-shit", "23", 2, 45, "blue")
+clothing = Clothing("T-shrit", "23", 2, 45, "blue")
 print("Produkt:", clothing.get_category(), "-", clothing.get_name(), "-", clothing.get_price(), "-",
 clothing.get_size(), "-", clothing.get_color())

@@ -4,6 +4,7 @@ from utils.validator import Validator
 from exceptions.shop_error import ShopError
 
 
+
 class Product(ABC):
 
 
@@ -49,7 +50,7 @@ class Product(ABC):
         self._price = price
 
     #weight-----------------------------------------------------------------
-    
+
     def get_weight(self):
         return self._weight
 
@@ -57,3 +58,140 @@ class Product(ABC):
         if not Validator.validate_weight(weight):
             raise ShopError(f"Ungültiges Gewicht (muss > 0 sein): {weight}")
         self._weight = weight
+
+    # ==========================================================================================
+
+    # ----------------------------------------------------------------
+    # LOAD ONE PRODUCT
+
+
+    @staticmethod
+    def load(storage, product_id):
+        from models_shop.products.electronic import Electronic
+        from models_shop.products.clothing import Clothing
+        from models_shop.products.book import Book
+
+        query = """
+        SELECT *
+        FROM product
+        WHERE id = %s
+        """
+
+        result = storage.fetch_query(query, (product_id,))
+
+        if not result:
+            return None
+
+        product = result[0]
+
+        #----------------------------------------------------------------
+        # ELECTRONIC
+
+
+        query = """
+        SELECT *
+        FROM electronic
+        WHERE product_id = %s
+        """
+
+        result = storage.fetch_query(query, (product_id,))
+
+        if result:
+
+            row = result[0]
+
+            electronic = Electronic(
+                product["name"],
+                product["price"],
+                product["weight"],
+                row["brand"],
+                row["warranty_years"]
+            )
+
+            electronic._id = product["id"]
+
+            return electronic
+
+        # ----------------------------------------------------------------
+        # CLOTHING
+
+
+        query = """
+        SELECT *
+        FROM clothing
+        WHERE product_id = %s
+        """
+
+        result = storage.fetch_query(query, (product_id,))
+
+        if result:
+
+            row = result[0]
+
+            clothing = Clothing(
+                product["name"],
+                product["price"],
+                product["weight"],
+                row["size"],
+                row["color"]
+            )
+
+            clothing._id = product["id"]
+
+            return clothing
+
+        #----------------------------------------------------------------
+        # BOOK
+
+
+        query = """
+        SELECT *
+        FROM book
+        WHERE product_id = %s
+        """
+
+        result = storage.fetch_query(query, (product_id,))
+
+        if result:
+
+            row = result[0]
+
+            book = Book(
+                product["name"],
+                product["price"],
+                product["weight"],
+                row["author"],
+                row["pages"]
+            )
+
+            book._id = product["id"]
+
+            return book
+
+        return None
+
+    #----------------------------------------------------------------
+    # LOAD ALL PRODUCTS
+    
+
+    @staticmethod
+    def load_all(storage):
+
+        query = """
+        SELECT id
+        FROM product
+        ORDER BY id
+        """
+
+        results = storage.fetch_query(query)
+
+        products = []
+
+        for row in results:
+
+            product = Product.load(storage, row["id"])
+
+            if product:
+                products.append(product)
+
+        return products

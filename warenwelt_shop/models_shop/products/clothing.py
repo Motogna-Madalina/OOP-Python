@@ -33,3 +33,4 @@ class Clothing(Product):
         if not Validator.validate_color(color):
             raise ShopError(f"Ungültige Farbe: {color}")
         self._color = color
+
